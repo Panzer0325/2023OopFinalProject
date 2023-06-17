@@ -22,10 +22,13 @@ public class LoginGUI extends JFrame {
 	//
 	private CardLayout cardlayout;
 	JLabel errormessage = new JLabel("");
+	JLabel test = new JLabel("");
 	private JTextField newaccount;
 	private JPasswordField newpassword;
 	//
 	private ArrayList<Repairman> repairmanlist;
+	private RentScooterService scooterservice;
+	
 	//
 	  private static ArrayList<Repairman> loadRepairmanDataFromJson(String filePath) {
 	        ObjectMapper objectMapper = new ObjectMapper();
@@ -38,25 +41,7 @@ public class LoginGUI extends JFrame {
 	        }
 	        return new ArrayList<>();
 	    }
-	 //
-	  public boolean checkArraysEquality(String[] array1, String[] array2) {
-		    // Check if array lengths are equal
-		    if (array1.length != array2.length) {
-		        return false;
-		    }
-
-		    // Iterate over each element of the arrays
-		    for (int i = 0; i < array1.length; i++) {
-		        // Compare elements using equals() method
-		        if (!array1[i].equals(array2[i])) {
-		            return false;
-		        }
-		    }
-
-		    // All elements are equal
-		    return true;
-		}
-
+	  
 	/**
 	 * Launch the application.
 	 */
@@ -64,7 +49,7 @@ public class LoginGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					LoginGUI frame = new LoginGUI();
+					LoginGUI frame = new LoginGUI(null);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -76,7 +61,8 @@ public class LoginGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public LoginGUI() {
+	public LoginGUI(RentScooterService scooterservice) {
+		this.scooterservice=scooterservice;
 		setTitle("EV Renting Platform");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1920, 1080);
@@ -117,7 +103,7 @@ public class LoginGUI extends JFrame {
 		
 		account = new JTextField();
 		account.setFont(new Font("標楷體", Font.PLAIN, 20));
-		account.setBounds(205, 137, 442, 40);
+		account.setBounds(205, 122, 442, 40);
 		customerpane.add(account);
 		account.setColumns(10);
 		
@@ -148,6 +134,10 @@ public class LoginGUI extends JFrame {
 		enrollbottom.setBounds(96, 280, 146, 40);
 		customerpane.add(enrollbottom);
 		
+		test.setFont(new Font("標楷體", Font.PLAIN, 18));
+		test.setBounds(303, 30, 236, 49);
+		customerpane.add(test);
+	
 		JPanel staffpane = new JPanel();
 		staffpane.setLayout(null);
 		mainpane.add(staffpane,"staffpane");
@@ -174,7 +164,7 @@ public class LoginGUI extends JFrame {
 		staffpane.add(staffpassword);
 		
 		JButton stafflogin = new JButton("登入");
-		StaffLogin stafflog= new StaffLogin();
+		StaffLogin stafflog=new StaffLogin();
 		stafflogin.addActionListener(stafflog);
 		stafflogin.setFont(new Font("標楷體", Font.PLAIN, 25));
 		stafflogin.setBounds(518, 292, 129, 62);
@@ -250,33 +240,32 @@ public class LoginGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			 // 
-            String acc=staffaccount.getText();
-            String pw=new String(staffpassword.getPassword());
-            RentScooterService login=new RentScooterService();
-            if(login.userLogIn(acc,pw)) {
-            	UserGUI user=new UserGUI();
+            String acc=account.getText();
+            String pw=new String(password.getPassword());
+            test.setText(pw);
+            test.setVisible(true);
+            if(true==scooterservice.userLogIn("WeirdCoffeePerson", "HarioV60")) {
+            	UserGUI user=new UserGUI(scooterservice);
     			user.setVisible(true);
     			LoginGUI.this.dispose();
         }
-			errormessage.setText("InValid Account/Password");
+            else{
+            	errormessage.setText("InValid Account/Password");
+            	}
 		}
 	}
 	public class StaffLogin extends JFrame implements ActionListener{
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			// Load Repairman data from JSON file
-	        repairmanlist = loadRepairmanDataFromJson("resources/repairman.json");
-	        // 
-	            String acc=staffaccount.getText();
-	            String pw=new String(staffpassword.getPassword());
-	            RentScooterService login=new RentScooterService();
-	            if(login.repairmanLogIn(acc,pw)) {
-	        		StaffGUI worker=new StaffGUI();
-	    			worker.setVisible(true);
-	    			LoginGUI.this.dispose();
-	        }
-			errormessage.setText("InValid Account/Password");
-			errormessage.setVisible(true);
+			public void actionPerformed(ActionEvent e) {
+		        // 
+		           String acc=staffaccount.getText();
+		           String pw=new String(staffpassword.getPassword());
+		           if(scooterservice.repairmanLogIn(acc,pw)) {
+		        		StaffGUI worker=new StaffGUI();
+		    			worker.setVisible(true);
+		    			LoginGUI.this.dispose();
+		        }
+				errormessage.setText("InValid Account/Password");
+			}
 		}
-	}
 }

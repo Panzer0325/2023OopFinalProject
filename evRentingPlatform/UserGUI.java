@@ -23,13 +23,13 @@ public class UserGUI extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField account;
-	private JPasswordField password;
+	private JTextField password;
 	private final static String rentstr="rentcar";
 	private final static String profilestr="profile";
 	private final static String ridestr="ride";
 	
 	//Textfields
-	private JTextField phonenum;
+	private JTextField phone;
 	private JTextField coupon;
 	private JTextField name;
 	private JTextField email;
@@ -52,8 +52,14 @@ public class UserGUI extends JFrame {
 	JPanel checkoutpane = new JPanel();
 	JPanel ridepane = new JPanel();
 	
-	private ScooterSelectionGUI carSelectionFrame; // Add a reference to the CarSelectionGUI frame
+	private ScooterSelectionGUI scooterselectionFrame; // Add a reference to the CarSelectionGUI frame
 	private ChargeStationGUI ChargeStationFrame;// Add a reference to the ChargeStationGUI frame
+	private RentScooterService service;//scooterservice
+	
+	//record user's final position
+	public double[] userfinalposition;
+	//whether coupon is used
+	private boolean withcoupon;
 	
 	//getters for cardlayout
 	public CardLayout getCardLayout() {
@@ -68,7 +74,7 @@ public class UserGUI extends JFrame {
 	 */
 	
 	public static void creategui() {
-		UserGUI frame = new UserGUI();
+		UserGUI frame = new UserGUI(null);
 		frame.setVisible(true);
 	}
 	public static void main(String[] args) {
@@ -86,8 +92,8 @@ public class UserGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public UserGUI() {
-        
+	public UserGUI(RentScooterService service) {
+		this.service=service;
 		setTitle("EV Renting Platform");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1920, 1080);
@@ -99,10 +105,11 @@ public class UserGUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JLabel Title = new JLabel("Welcome");
-		Title.setFont(new Font("微軟正黑體", Font.PLAIN, 45));
+		JLabel Title = new JLabel();
+		Title.setFont(new Font("微軟正黑體", Font.PLAIN, 40));
 		Title.setLabelFor(Title);
-		Title.setBounds(757, 10, 218, 66);
+		Title.setBounds(637, 0, 695, 66);
+		Title.setText("Welcome, "+service.getUserOperator().getAccount());
 		contentPane.add(Title);
 		
 		mainpane.setBounds(0, 70, 1906, 933);
@@ -127,22 +134,30 @@ public class UserGUI extends JFrame {
 		account.setBounds(776, 199, 442, 40);
 		accountpane.add(account);
 		account.setColumns(10);
+		account.setText(service.getUserOperator().getAccount());
 		
-		password = new JPasswordField();
+		password = new JTextField();
 		password.setFont(new Font("\u6A19\u6977\u9AD4", password.getFont().getStyle(), 20));
 		password.setBounds(776, 285, 442, 42);
 		accountpane.add(password);
+		password.setText(service.getUserOperator().getPassword());
 		
 		JButton renew = new JButton("更新");
+		renew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				service.getUserOperator().setAccount(account.getText());
+			}
+		});
 		renew.setFont(new Font("微軟正黑體", Font.PLAIN, 25));
 		renew.setBounds(1273, 199, 129, 40);
 		accountpane.add(renew);
 		
-		phonenum = new JTextField();
-		phonenum.setFont(new Font("標楷體", Font.PLAIN, 20));
-		phonenum.setColumns(10);
-		phonenum.setBounds(776, 372, 442, 40);
-		accountpane.add(phonenum);
+		phone = new JTextField();
+		phone.setFont(new Font("標楷體", Font.PLAIN, 20));
+		phone.setColumns(10);
+		phone.setBounds(776, 372, 442, 40);
+		accountpane.add(phone);
+		phone.setText(service.getUserOperator().getCellphone());
 		
 		JLabel Phone = new JLabel("手機號碼:");
 		Phone.setFont(new Font("標楷體", Font.PLAIN, 30));
@@ -182,12 +197,14 @@ public class UserGUI extends JFrame {
 		name.setColumns(10);
 		name.setBounds(776, 553, 442, 40);
 		accountpane.add(name);
+		name.setText(service.getUserOperator().getUserName());
 		
 		email = new JTextField();
 		email.setFont(new Font("標楷體", Font.PLAIN, 20));
 		email.setColumns(10);
 		email.setBounds(776, 462, 442, 40);
 		accountpane.add(email);
+		email.setText(service.getUserOperator().getEmail());
 		
 		JLabel Email = new JLabel("email:");
 		Email.setFont(new Font("標楷體", Font.PLAIN, 30));
@@ -199,6 +216,7 @@ public class UserGUI extends JFrame {
 		payment.setColumns(10);
 		payment.setBounds(776, 648, 442, 40);
 		accountpane.add(payment);
+		payment.setText(service.getUserOperator().getCreditCard());
 		
 		JLabel Name = new JLabel("姓名:");
 		Name.setFont(new Font("標楷體", Font.PLAIN, 30));
@@ -206,26 +224,51 @@ public class UserGUI extends JFrame {
 		accountpane.add(Name);
 		
 		JButton renew_1 = new JButton("更新");
+		renew_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				service.getUserOperator().setPassword(password.getText());
+			}
+		});
 		renew_1.setFont(new Font("微軟正黑體", Font.PLAIN, 25));
 		renew_1.setBounds(1273, 292, 129, 40);
 		accountpane.add(renew_1);
 		
 		JButton renew_2 = new JButton("更新");
+		renew_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				service.getUserOperator().setCellphone(phone.getText());
+			}
+		});
 		renew_2.setFont(new Font("微軟正黑體", Font.PLAIN, 25));
 		renew_2.setBounds(1273, 372, 129, 40);
 		accountpane.add(renew_2);
 		
 		JButton renew_3 = new JButton("更新");
+		renew_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				service.getUserOperator().setEmail(email.getText());
+			}
+		});
 		renew_3.setFont(new Font("微軟正黑體", Font.PLAIN, 25));
 		renew_3.setBounds(1273, 462, 129, 40);
 		accountpane.add(renew_3);
 		
 		JButton renew_4 = new JButton("更新");
+		renew_4.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				service.getUserOperator().setUserName(name.getText());
+			}
+		});
 		renew_4.setFont(new Font("微軟正黑體", Font.PLAIN, 25));
 		renew_4.setBounds(1273, 553, 129, 40);
 		accountpane.add(renew_4);
 		
 		JButton renew_5 = new JButton("更新");
+		renew_5.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				service.getUserOperator().setCreditCard(payment.getText());
+			}
+		});
 		renew_5.setFont(new Font("微軟正黑體", Font.PLAIN, 25));
 		renew_5.setBounds(1273, 648, 129, 40);
 		accountpane.add(renew_5);
@@ -234,28 +277,40 @@ public class UserGUI extends JFrame {
 		rentpane.setLayout(null);
 		
 		JLabel Range = new JLabel("範圍(km):");
-		Range.setBounds(542, 29, 146, 62);
+		Range.setBounds(534, 305, 146, 62);
 		Range.setFont(new Font("標楷體", Font.PLAIN, 30));
 		rentpane.add(Range);
 		
 		JButton search = new JButton("查詢");
-		search.setBounds(845, 121, 129, 62);
+		search.setBounds(703, 456, 129, 62);
 		search.setFont(new Font("標楷體", Font.PLAIN, 25));
 		rentpane.add(search);
 		 // Add ActionListener to the search button
         search.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Perform the search action
-            	carSelectionFrame = new ScooterSelectionGUI(new ArrayList<>(),UserGUI.this);
-                carSelectionFrame.setVisible(true);
+            	scooterselectionFrame = new ScooterSelectionGUI(service,new ArrayList<>(),UserGUI.this,Double.parseDouble(range.getText()));
+            	scooterselectionFrame.setVisible(true);
             }
         });
 		
 		range = new JTextField();
 		range.setFont(new Font("標楷體", Font.PLAIN, 20));
 		range.setColumns(10);
-		range.setBounds(719, 40, 442, 40);
+		range.setBounds(769, 318, 442, 40);
 		rentpane.add(range);
+		
+		JLabel currentposition = new JLabel("目前位置:");
+		currentposition.setFont(new Font("標楷體", Font.PLAIN, 30));
+		currentposition.setBounds(534, 187, 146, 62);
+		rentpane.add(currentposition);
+		
+		JLabel currentPosition = new JLabel();
+		currentPosition.setFont(new Font("微軟正黑體", Font.PLAIN, 22));
+		currentPosition.setBounds(769, 194, 442, 40);
+		rentpane.add(currentPosition);
+		Position current=service.showUserPosition(service.getUserOperator());
+		currentPosition.setText(Double.toString(current.lat)+" , "+Double.toString(current.lng));
 		
 		ridepane.setLayout(null);
 		mainpane.add(ridepane, "ride");
@@ -263,7 +318,7 @@ public class UserGUI extends JFrame {
 		JButton Charge = new JButton("尋找充電站");
 		Charge.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				 ChargeStationFrame=new ChargeStationGUI(UserGUI.this);
+				 ChargeStationFrame=new ChargeStationGUI(service,UserGUI.this);
 				 ChargeStationFrame.setVisible(true);
 			}
 		});
@@ -279,8 +334,15 @@ public class UserGUI extends JFrame {
 		JButton back = new JButton("歸還車輛");
 		back.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			cardlayout.show(mainpane, "checkout");
-			currentcard="checkout";
+			if(service.endRidingScooter(service.getUserOperator())) {
+				JOptionPane.showMessageDialog(ridepane, "歸還成功");
+				userfinalposition=service.displayPositionAndDistance(service.getUserOperator());
+				location.setText(Double.toString(userfinalposition[0])+" , "+Double.toString(userfinalposition[1]));
+				totalrange.setText(Double.toString(userfinalposition[2]));
+				fee.setText(Double.toString(service.displayFee(service.getUserOperator())));
+				cardlayout.show(mainpane, "checkout");
+				currentcard="checkout";
+			}
 			}
 		});
 		back.setFont(new Font("標楷體", Font.PLAIN, 25));
@@ -295,12 +357,18 @@ public class UserGUI extends JFrame {
 		stop.setFont(new Font("標楷體", Font.PLAIN, 25));
 		stop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				service.stopRidingScooter(service.getUserOperator());
 			}
 		});
 		stop.setBounds(1091, 309, 212, 62);
 		ridepane.add(stop);
 		
 		JButton resume = new JButton("開始騎車");
+		resume.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				service.rideScooter(service.getUserOperator());
+			}
+		});
 		resume.setFont(new Font("標楷體", Font.PLAIN, 25));
 		resume.setBounds(558, 308, 212, 64);
 		ridepane.add(resume);
@@ -317,14 +385,17 @@ public class UserGUI extends JFrame {
 		location.setFont(new Font("標楷體", Font.PLAIN, 20));
 		location.setColumns(10);
 		location.setBounds(778, 199, 442, 40);
+		location.setEditable(false);
 		checkoutpane.add(location);
 		
 		JButton pay = new JButton("確認並付款");
 		pay.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				if(service.payFeeAndReturnScooter(service.getUserOperator(),true)) {
 				JOptionPane.showMessageDialog(ridepane, "付款完成，感謝您的使用!");
 				cardlayout.show(mainpane, "profile");
 				currentcard=profilestr;
+				}
 			}
 		});
 		pay.setFont(new Font("微軟正黑體", Font.PLAIN, 25));
@@ -335,6 +406,7 @@ public class UserGUI extends JFrame {
 		totalrange.setFont(new Font("標楷體", Font.PLAIN, 20));
 		totalrange.setColumns(10);
 		totalrange.setBounds(778, 311, 442, 40);
+		totalrange.setEditable(false);
 		checkoutpane.add(totalrange);
 		
 		JLabel Totalrange = new JLabel("總駕駛里程:");
@@ -367,21 +439,24 @@ public class UserGUI extends JFrame {
 		
 		JLabel Coupon_1_1 = new JLabel("張");
 		Coupon_1_1.setFont(new Font("標楷體", Font.PLAIN, 30));
-		Coupon_1_1.setBounds(972, 572, 38, 62);
+		Coupon_1_1.setBounds(935, 572, 38, 62);
 		checkoutpane.add(Coupon_1_1);
 		
 		fee = new JTextField();
 		fee.setFont(new Font("標楷體", Font.PLAIN, 20));
 		fee.setColumns(10);
 		fee.setBounds(778, 463, 442, 40);
+		fee.setEditable(false);
 		checkoutpane.add(fee);
 		
-		JButton usecoupon = new JButton("使用優惠券");
+		JCheckBox usecoupon = new JCheckBox("使用優惠券");
+		usecoupon.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
 		usecoupon.setFont(new Font("微軟正黑體", Font.PLAIN, 25));
-		usecoupon.setBounds(1120, 572, 188, 62);
+		usecoupon.setBounds(1034, 571, 157, 56);
 		checkoutpane.add(usecoupon);
-		
-	    DefaultTableModel tableModel = new DefaultTableModel(new Object[]{"Number", "latitude","longitude", "Battery"}, 0);
 		
 	    JMenuBar menuBar = new JMenuBar();
 		menuBar.setFont(new Font("Microsoft JhengHei UI", Font.PLAIN, 18));

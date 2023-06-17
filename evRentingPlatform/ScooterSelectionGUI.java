@@ -17,12 +17,13 @@ public class ScooterSelectionGUI extends JFrame {
     private JTable carTable;
     private JButton selectButton;
     private UserGUI frame1;
-    private String selectedCarNumber;
+    private String selectedScooterNumber;
     private ArrayList<Scooter> scooterList;
+    private Scooter selectedscooter;
     /**
 	 * 
 	 */
-    public ScooterSelectionGUI(ArrayList<Scooter> scooterList,UserGUI frame1) {
+    public ScooterSelectionGUI(RentScooterService service,ArrayList<Scooter> scooterList,UserGUI frame1,double range) {
     	this.scooterList=scooterList;
     	this.frame1=frame1;
         // Set up the frame
@@ -34,7 +35,7 @@ public class ScooterSelectionGUI extends JFrame {
         tableModel.setColumnIdentifiers(new Object[]{"Number", "Latitude", "Longitude", "Power"});
         
         // Load scooter data from JSON file
-        scooterList = loadScooterDataFromJson("resources/scooter_detail.json");
+        scooterList = service.searchScooter(service.getUserOperator(),range);
 
         // Populate the table with scooter data
         for (Scooter scooter : scooterList) {
@@ -53,12 +54,14 @@ public class ScooterSelectionGUI extends JFrame {
             // Get the selected row
             int selectedRow = carTable.getSelectedRow();
             if (selectedRow != -1) {
-                selectedCarNumber = (String) carTable.getValueAt(selectedRow, 0);
-                JOptionPane.showMessageDialog(this, "租借車輛為: " + selectedCarNumber);
-                this.dispose();
-                frame1.num.setText(getselectedCarNumber());
+                selectedScooterNumber = (String) carTable.getValueAt(selectedRow, 0);
+                JOptionPane.showMessageDialog(this, "租借車輛為: " + selectedScooterNumber);
+                selectedscooter=new Scooter(selectedScooterNumber,(double) carTable.getValueAt(selectedRow, 1),(double) carTable.getValueAt(selectedRow, 2),(int) carTable.getValueAt(selectedRow, 3));
+                service.rentScooter(service.getUserOperator(),selectedscooter);
+                frame1.num.setText(getselectedScooterNumber());
                 frame1.getCardLayout().show(frame1.getCardPanel(), "ride");
                 UserGUI.currentcard="ride";
+                this.dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "請選擇車輛");
             }
@@ -78,26 +81,15 @@ public class ScooterSelectionGUI extends JFrame {
     }
     
     //getter for selectedCarnumber
-    public String getselectedCarNumber() {
-    	return selectedCarNumber;
-    }
-    private static ArrayList<Scooter> loadScooterDataFromJson(String filePath) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            File file = new File(filePath);
-            Scooter[] scooterArray = objectMapper.readValue(file, Scooter[].class);
-            return new ArrayList<>(Arrays.asList(scooterArray));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<>();
+    public String getselectedScooterNumber() {
+    	return selectedScooterNumber;
     }
     
     //method for testing
     public static void main(String[] args) {
     	SwingUtilities.invokeLater(() -> {
-    	    UserGUI frame1 = new UserGUI();
-    	    ScooterSelectionGUI scooterSelectionGUI = new ScooterSelectionGUI(null, null);
+    	    UserGUI frame1 = new UserGUI(null);
+    	    ScooterSelectionGUI scooterSelectionGUI = new ScooterSelectionGUI(null,null, null,10);
     	    scooterSelectionGUI.setVisible(true);
     	});
     }
