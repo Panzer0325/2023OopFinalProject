@@ -5,6 +5,7 @@ package evRentingPlatform;
  *
  */
 public class ChargingStation extends ObjetWithPositon{
+
 	/**
 	 * the series number of the charging station; read from given .json file
 	 */
@@ -43,6 +44,12 @@ public class ChargingStation extends ObjetWithPositon{
 	 */
 	public void setNo(int no) {
 		this.no = no;
+	}
+	
+	@Override
+	public String toString() {
+		return "Charging Station No." + this.no + 
+				"\n<" + this.getPosition().toString() + ">";
 	}
 	
 }
