@@ -1,0 +1,834 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1.0">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1820</x>
+      <y>651</y>
+      <w>399</w>
+      <h>448</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatform::RentScooterService
+--
+-userList: ArrayList&lt;User&gt;
+-scooterList: ArrayList&lt;Scooter&gt;
+-repairmanList: ArrayList&lt;Repairman&gt;
+-chargingStationList: ArrayList&lt;ChargingStation&gt;
+-rpOperator = null: Repairman
+-userOperator = null: User
+-rideScooterThread: RideScooterThread
+-latch: CountDownLatch
+--
++RentScooterService(): ctor
++getUserOperator(): User
++getrpOperator(): Repairman
+-initiateUser(ObjectMapper SingletonObjectMapper): boolean
+-initiateScooter(ObjectMapper SingletonObjectMapper): boolean
+-initiateRepairman(ObjectMapper SingletonObjectMapper): boolean
+-initiateChargingStation(ObjectMapper SingletonObjectMapper): boolean
++userLogIn(String account, String password): boolean
++userLogOut(): boolean
++registerNewUser(String account, String password): boolean
++repairmanLogIn(String account, String password): boolean
++repairmanLogOut(): boolean
++showUserPosition(User user): Position
++searchScooter(User user, double diameter): ArrayList&lt;Scooter&gt;
++rentScooter(User user, Scooter scooter): boolean
++rideScooter(User user): boolean
++stopRidingScooter(User user): boolean
++searchChargingStation(User user): ArrayList&lt;ChargingStation&gt;
++moveToChargingStation(User user, ChargingStation chargingStation): boolean
++chargeScooter(User user): boolean
++endRidingScooter(User user): boolean
++displayPositionAndDistance(User user): double[]
++displayFee(User user): double
++findQualifiedCoupon(User user): Coupon
++payFeeAndReturnScooter(User user, Coupon coupon): double
++payFeeAndReturnScooter(User user): double
++searchMalfunctionScooter(Repairman repairman): ArrayList&lt;Scooter&gt;
++fixScooter(Repairman repairman, Scooter scooter): boolean
++chargeLowBatteryScooter(Repairman repairman, Scooter scooter): boolean
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1862</x>
+      <y>133</y>
+      <w>308</w>
+      <h>385</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatform::RentHistory
+--
+-date: LocalDate
+-rentFee: double
+-positionHistory = new ArrayList&lt;Position&gt;(10): ArrayList&lt;Position&gt;
+-distance: double
+-rentStartTime: LocalTime
+-rentEndTime: LocalTime
+-totalTime: Duration
+-chargeTimes = 0: int
+-withCoupon = false: boolean
+-scooterNo: String
+-historyID: String
+--
++RentHistory(Position startPosition, String scooterNo): ctor
++getDate(): LocalDate
++getRentFee(): double
++calculateRentFee(): void
++getPositionHistory(): ArrayList&lt;Position&gt;
++updatePositionHistory(Position newPosition): void
++getDistance(): double
++CalculateDistance(): void
++getRentStartTime(): LocalTime
++getRentEndTime(): LocalTime
++setRentEndTime(LocalTime rentEndTime): void
++getTotalTime(): Duration
++calculateTotalTime(): void
++getChargeTimes(): int
++addChargeTimes(): void
++isWithCoupon(): boolean
++setWithCoupon(boolean withCoupon): void
++getScooterNo(): String
++getHistoryID(): String
++toString(): String
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2254</x>
+      <y>329</y>
+      <w>266</w>
+      <h>217</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatform::Scooter
+--
+-no: String
+-status = setRandomInitialStatus(): ScooterStatus
+-power: int
+--
++Scooter(): ctor
++Scooter(String no, double lat, double lng, int power): ctor
++Scooter(String no, Position position, int power): ctor
+-setRandomInitialStatus(): ScooterStatus
++getNo(): String
++setNo(String no): void
++getStatus(): ScooterStatus
++setStatus(ScooterStatus status): void
++getPower(): int
++setPower(int power): void
++consumePower(double distance): void
++toString(): String
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2478</x>
+      <y>91</y>
+      <w>217</w>
+      <h>168</h>
+    </coordinates>
+    <panel_attributes>/evRentingPlatform::ObjetWithPositon/
+--
+-position = new Position(): Position
+--
++ObjetWithPositon(): ctor
++ObjetWithPositon(Position position): ctor
++ObjetWithPositon(double lat, double lng): ctor
++getLat(): double
++setLat(double lat): void
++getLng(): double
++setLng(double lng): void
++getPosition(): Position
++setPosition(Position position): void
++setPosition(double lat, double lng): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2583</x>
+      <y>329</y>
+      <w>217</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>/evRentingPlatform::Person/
+--
+-account: String
+-password: String
+--
++Person(): ctor
++Person(String account, String password): ctor
++getAccount(): String
++setAccount(String account): void
++getPassword(): String
++setPassword(String password): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2905</x>
+      <y>119</y>
+      <w>294</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatform::Position
+--
++lat: double
++lng: double
+--
++Position(double lat, double lng): ctor
++Position(Position copyPosition): ctor
++Position(): ctor
++equals(Position position): boolean
++toString(): String
++calculateDistance(Position position1, Position position2): double
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2737</x>
+      <y>938</y>
+      <w>175</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatform::Coupon
+--
+-rentHistoryID: String
+-usedFlag = false: boolean
+--
++Coupon(RentHistory affiliation): ctor
++getHistoryID(): String
++useCoupon(): boolean
++getUsedFlag(): boolean
++toString(): String
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1848</x>
+      <y>1141</y>
+      <w>280</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatform::RideScooterThread
+--
+-user: User
+-riding = true: boolean
+-latch: CountDownLatch
+--
++RideScooterThread(User user, CountDownLatch latch): ctor
++stopUpdating(): void
++generate(Double lat, Double lng): Position
++run(): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1848</x>
+      <y>1302</y>
+      <w>196</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatform::FixScooterThread
+--
+-scooter: Scooter
+--
++FixScooterThread(Scooter scooter): ctor
++run(): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2219</x>
+      <y>1162</y>
+      <w>238</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatform::InsufficientBatteryException
+--
+--
++InsufficientBatteryException(): ctor
++InsufficientBatteryException(String message): ctor
++getMessage(): String
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2226</x>
+      <y>1309</y>
+      <w>210</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatform::LowBatteryException
+--
+--
++LowBatteryException(): ctor
++LowBatteryException(String message): ctor
++getMessage(): String
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2919</x>
+      <y>651</y>
+      <w>231</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatform::Repairman
+--
+--
++Repairman(): ctor
++Repairman(String account, String password): ctor
++toString(): String
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1365</x>
+      <y>665</y>
+      <w>252</w>
+      <h>560</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatformGUI::UserGUI
+--
+-account: JTextField
+-password: JTextField
+-phone: JTextField
+-name: JTextField
+-email: JTextField
+-payment: JTextField
+-range: JTextField
+-location: JTextField
+-totalrange: JTextField
+-fee: JTextField
+-couponnum: JTextField
+-contentPane: JPanel
+~cardlayout = new CardLayout(): CardLayout
+~mainpane = new JPanel(cardlayout): JPanel
+~accountpane = new JPanel(): JPanel
+~rentpane = new JPanel(): JPanel
+~checkoutpane = new JPanel(): JPanel
+~ridepane = new JPanel(): JPanel
++currentcard: String
+-scooterselectionFrame: ScooterSelectionGUI
+-ChargeStationFrame: ChargeStationGUI
+-service: RentScooterService
++userfinalposition: double[]
+-coupon: Coupon
+-hasCoupon: JLabel
+-withcoupon: JCheckBox
+-riding: JLabel
+-pauseriding: JLabel
+-CurrentPosition: JLabel
+-PowerRemain: JLabel
+-DriveRange: JLabel
+~num = new JLabel(""): JLabel
+-webView: WebView
++Mappanel: JFXPanel
+--
++UserGUI(RentScooterService service): ctor
++getCardLayout(): CardLayout
++getCardPanel(): JPanel
++DisplayPowerRemain(int power): void
++DisplayCurrentPosition(Position currentposition): void
++DisplayAccumulativeDistance(double distance): void
++initializeJavaFX(): void
++loadMap(double latitude, double longitude): void
++creategui(): void
++main(String[] args): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1309</x>
+      <y>343</y>
+      <w>315</w>
+      <h>245</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatformGUI::LoginGUI
+--
+-contentPane: JPanel
+-mainpane = new JPanel(): JPanel
+-enrollpane: JPanel
+-staffpane: JPanel
+-customerpane: JPanel
+-account: JTextField
+-password: JPasswordField
+-staffaccount: JTextField
+-staffpassword: JPasswordField
+-newaccount: JTextField
+-newpassword: JPasswordField
+-cardlayout: CardLayout
+~errormessage = new JLabel(""): JLabel
+-scooterservice: RentScooterService
+--
++LoginGUI(RentScooterService scooterservice): ctor
+-loadRepairmanDataFromJson(String filePath): ArrayList&lt;Repairman&gt;
++main(String[] args): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>882</x>
+      <y>1113</y>
+      <w>322</w>
+      <h>161</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatformGUI::ChargeStationGUI
+--
+-stationTable: JTable
+-tableModel: DefaultTableModel
+-frame2: UserGUI
+-chargingstation: ChargingStation
+~service: RentScooterService
+--
++ChargeStationGUI(RentScooterService service, UserGUI frame2): ctor
++addChargeStation(double latitude, double longitude, int no): void
++main(String[] args): void
++actionPerformed(ActionEvent e): void
+-loadChargeStationDataFromJson(String filePath): List&lt;ChargingStation&gt;
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>784</x>
+      <y>812</y>
+      <w>539</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatformGUI::ScooterSelectionGUI
+--
+-carTable: JTable
+-selectButton: JButton
+-frame1: UserGUI
+-selectedScooterNumber: String
+-scooterList: ArrayList&lt;Scooter&gt;
+-selectedscooter: Scooter
+--
++ScooterSelectionGUI(RentScooterService service, ArrayList&lt;Scooter&gt; scooterList, UserGUI frame1, double range): ctor
++getselectedScooterNumber(): String
++main(String[] args): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>392</x>
+      <y>756</y>
+      <w>273</w>
+      <h>147</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatformGUI::StaffGUI
+--
+-scooterTable: JTable
+-tableModel = new DefaultTableModel(): DefaultTableModel
+-selectedRow: int
+-scooterList: ArrayList&lt;Scooter&gt;
+-selectedscooter: Scooter
+-service: RentScooterService
+--
++StaffGUI(RentScooterService service): ctor
+-updateScooterDataToJson(): void
++main(String[] args): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>483</x>
+      <y>1092</y>
+      <w>245</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatformGUI::Image
+--
+~ridingicon = new ImageIcon("ride.gif"): ImageIcon
+~pauseicon = new ImageIcon("pause.jpg"): ImageIcon
+--
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2275</x>
+      <y>651</y>
+      <w>413</w>
+      <h>434</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatform::User
+--
+-cellphone = null: String
+-email = null: String
+-userName = null: String
+-creditCard = null: String
+-Couponnum = 0: int
+-rentHistory = new ArrayList&lt;RentHistory&gt;(5): ArrayList&lt;RentHistory&gt;
+-rentEvent: RentHistory
+-scooter = null: Scooter
+-couponList = new ArrayList&lt;Coupon&gt;(5): ArrayList&lt;Coupon&gt;
+--
++User(): ctor
++User(String account, String password): ctor
++setInitialPosition(): void
++getRentHistory(): ArrayList&lt;RentHistory&gt;
++newRentEvent(): void
++getRentEvent(): RentHistory
++clearRentEvent(): void
++getScooter(): Scooter
++setScooter(Scooter scooter): void
++getCouponList(): ArrayList&lt;Coupon&gt;
++addToCouponList(Coupon coupon): boolean
++getCellphone(): String
++setCellphone(String cellphone): void
++getEmail(): String
++setEmail(String email): void
++getUserName(): String
++setUserName(String userName): void
++getCreditCard(): String
++setCreditCard(String creditCard): void
++getCoupon(): int
++addCoupon(): void
++useCoupon(): void
++simpleToString(): String
++toString(): String
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2933</x>
+      <y>329</y>
+      <w>238</w>
+      <h>126</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatform::ChargingStation
+--
+-no: int
+--
++ChargingStation(): ctor
++ChargingStation(int no, double lat, double lng): ctor
++ChargingStation(int no, Position position): ctor
++getNo(): int
++setNo(int no): void
++toString(): String
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1260</x>
+      <y>259</y>
+      <w>245</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatformGUI::InitializeRentScooterService
+--
+--
++main(String[] args): void
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLPackage</id>
+    <coordinates>
+      <x>0</x>
+      <y>231</y>
+      <w>1645</w>
+      <h>1148</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatformGUI
+--
+bg=white
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>105</x>
+      <y>266</y>
+      <w>980</w>
+      <h>455</h>
+    </coordinates>
+    <panel_attributes>evRentingPlatformGUI::RentHistoryGUI
+--
+-historyTable: JTable
+-tableModel: DefaultTableModel
+-historylist = new ArrayList&lt;RentHistory&gt;(10): ArrayList&lt;RentHistory&gt;
+-position = new ArrayList&lt;Position&gt;(10): ArrayList&lt;Position&gt;
+--
++RentHistoryGUI(RentScooterService service): ctor
++addRentingEntry(LocalDate date, double rentFee, String startPosition, String endPosition, double distance, LocalTime rentStartTime, LocalTime rentEndTime, Duration totalTime, int chargeTimes, boolean withCoupon): void
++main(String[] args): void
++actionPerformed(ActionEvent e): void
+--
+
+layer=1</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2401</x>
+      <y>252</y>
+      <w>154</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>200.0;10.0;200.0;60.0;10.0;60.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2611</x>
+      <y>252</y>
+      <w>21</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2660</x>
+      <y>252</y>
+      <w>371</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0;510.0;60.0;510.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2625</x>
+      <y>455</y>
+      <w>21</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;280.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1610</x>
+      <y>826</y>
+      <w>224</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..</panel_attributes>
+    <additional_attributes>10.0;10.0;300.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2688</x>
+      <y>175</y>
+      <w>231</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>310.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3059</x>
+      <y>245</y>
+      <w>21</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1547</x>
+      <y>0</y>
+      <w>1218</w>
+      <h>357</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;490.0;10.0;10.0;1720.0;10.0;1720.0;470.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2688</x>
+      <y>154</y>
+      <w>231</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..</panel_attributes>
+    <additional_attributes>310.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2772</x>
+      <y>455</y>
+      <w>315</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;170.0;430.0;170.0;430.0;280.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2737</x>
+      <y>455</y>
+      <w>322</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;200.0;440.0;200.0;440.0;280.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2646</x>
+      <y>455</y>
+      <w>21</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;280.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1589</x>
+      <y>595</y>
+      <w>924</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;100.0;10.0;10.0;1300.0;10.0;1300.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2093</x>
+      <y>84</y>
+      <w>322</w>
+      <h>581</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0;160.0;10.0;160.0;680.0;440.0;680.0;440.0;810.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2660</x>
+      <y>609</y>
+      <w>119</w>
+      <h>343</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>150.0;470.0;150.0;10.0;10.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2128</x>
+      <y>98</y>
+      <w>448</w>
+      <h>567</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0;460.0;10.0;460.0;300.0;620.0;300.0;620.0;790.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2674</x>
+      <y>630</y>
+      <w>140</w>
+      <h>322</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;..</panel_attributes>
+    <additional_attributes>180.0;440.0;180.0;10.0;10.0;10.0;10.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2450</x>
+      <y>308</y>
+      <w>105</w>
+      <h>357</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;30.0;10.0;10.0;130.0;10.0;130.0;490.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1596</x>
+      <y>602</y>
+      <w>896</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>1260.0;70.0;1260.0;10.0;10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+</diagram>
