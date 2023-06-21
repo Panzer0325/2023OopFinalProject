@@ -72,6 +72,7 @@ public class StaffGUI extends JFrame {
         		if(service.repairmanLogOut()) {
         			LoginGUI login=new LoginGUI(service);
         			login.setVisible(true);
+				StaffGUI.this.dispose();
         		}
         	}
         });
